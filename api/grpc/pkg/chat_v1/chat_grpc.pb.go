@@ -23,9 +23,9 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type UserApiClient interface {
-	Create(ctx context.Context, in *CreateRequest, opts ...grpc.CallOption) (*CreateResponse, error)
+	CreateChat(ctx context.Context, in *CreateChatRequest, opts ...grpc.CallOption) (*CreateChatResponse, error)
 	SendMessage(ctx context.Context, in *SendMessageRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	Delete(ctx context.Context, in *DeleteRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	DeleteChat(ctx context.Context, in *DeleteChatRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type userApiClient struct {
@@ -36,9 +36,9 @@ func NewUserApiClient(cc grpc.ClientConnInterface) UserApiClient {
 	return &userApiClient{cc}
 }
 
-func (c *userApiClient) Create(ctx context.Context, in *CreateRequest, opts ...grpc.CallOption) (*CreateResponse, error) {
-	out := new(CreateResponse)
-	err := c.cc.Invoke(ctx, "/UserApi/Create", in, out, opts...)
+func (c *userApiClient) CreateChat(ctx context.Context, in *CreateChatRequest, opts ...grpc.CallOption) (*CreateChatResponse, error) {
+	out := new(CreateChatResponse)
+	err := c.cc.Invoke(ctx, "/UserApi/CreateChat", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -54,9 +54,9 @@ func (c *userApiClient) SendMessage(ctx context.Context, in *SendMessageRequest,
 	return out, nil
 }
 
-func (c *userApiClient) Delete(ctx context.Context, in *DeleteRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *userApiClient) DeleteChat(ctx context.Context, in *DeleteChatRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, "/UserApi/Delete", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/UserApi/DeleteChat", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -67,9 +67,9 @@ func (c *userApiClient) Delete(ctx context.Context, in *DeleteRequest, opts ...g
 // All implementations must embed UnimplementedUserApiServer
 // for forward compatibility
 type UserApiServer interface {
-	Create(context.Context, *CreateRequest) (*CreateResponse, error)
+	CreateChat(context.Context, *CreateChatRequest) (*CreateChatResponse, error)
 	SendMessage(context.Context, *SendMessageRequest) (*emptypb.Empty, error)
-	Delete(context.Context, *DeleteRequest) (*emptypb.Empty, error)
+	DeleteChat(context.Context, *DeleteChatRequest) (*emptypb.Empty, error)
 	mustEmbedUnimplementedUserApiServer()
 }
 
@@ -77,14 +77,14 @@ type UserApiServer interface {
 type UnimplementedUserApiServer struct {
 }
 
-func (UnimplementedUserApiServer) Create(context.Context, *CreateRequest) (*CreateResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Create not implemented")
+func (UnimplementedUserApiServer) CreateChat(context.Context, *CreateChatRequest) (*CreateChatResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateChat not implemented")
 }
 func (UnimplementedUserApiServer) SendMessage(context.Context, *SendMessageRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SendMessage not implemented")
 }
-func (UnimplementedUserApiServer) Delete(context.Context, *DeleteRequest) (*emptypb.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Delete not implemented")
+func (UnimplementedUserApiServer) DeleteChat(context.Context, *DeleteChatRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteChat not implemented")
 }
 func (UnimplementedUserApiServer) mustEmbedUnimplementedUserApiServer() {}
 
@@ -99,20 +99,20 @@ func RegisterUserApiServer(s grpc.ServiceRegistrar, srv UserApiServer) {
 	s.RegisterService(&UserApi_ServiceDesc, srv)
 }
 
-func _UserApi_Create_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateRequest)
+func _UserApi_CreateChat_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateChatRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UserApiServer).Create(ctx, in)
+		return srv.(UserApiServer).CreateChat(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/UserApi/Create",
+		FullMethod: "/UserApi/CreateChat",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserApiServer).Create(ctx, req.(*CreateRequest))
+		return srv.(UserApiServer).CreateChat(ctx, req.(*CreateChatRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -135,20 +135,20 @@ func _UserApi_SendMessage_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
-func _UserApi_Delete_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DeleteRequest)
+func _UserApi_DeleteChat_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteChatRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UserApiServer).Delete(ctx, in)
+		return srv.(UserApiServer).DeleteChat(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/UserApi/Delete",
+		FullMethod: "/UserApi/DeleteChat",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserApiServer).Delete(ctx, req.(*DeleteRequest))
+		return srv.(UserApiServer).DeleteChat(ctx, req.(*DeleteChatRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -161,16 +161,16 @@ var UserApi_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*UserApiServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "Create",
-			Handler:    _UserApi_Create_Handler,
+			MethodName: "CreateChat",
+			Handler:    _UserApi_CreateChat_Handler,
 		},
 		{
 			MethodName: "SendMessage",
 			Handler:    _UserApi_SendMessage_Handler,
 		},
 		{
-			MethodName: "Delete",
-			Handler:    _UserApi_Delete_Handler,
+			MethodName: "DeleteChat",
+			Handler:    _UserApi_DeleteChat_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

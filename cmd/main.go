@@ -19,28 +19,6 @@ type server struct {
 	desc.UnimplementedUserApiServer
 }
 
-func (s *server) Create(ctx context.Context, req *desc.CreateRequest) (*desc.CreateResponse, error) {
-	log.Printf("Context: %+v", ctx)
-	for _, value := range req.Usernames {
-		log.Printf("User id: %+v", value)
-	}
-
-	return &desc.CreateResponse{}, nil
-}
-
-func (s *server) SendMessage(ctx context.Context, req *desc.SendMessageRequest) (*emptypb.Empty, error) {
-	log.Printf("Context: %+v", ctx)
-	log.Printf("User id: %+v", req)
-
-	return &emptypb.Empty{}, nil
-}
-
-func (s *server) Delete(ctx context.Context, req *desc.DeleteRequest) (*emptypb.Empty, error) {
-	log.Printf("Context: %+v", ctx)
-	log.Printf("User id: %+d", req.GetId())
-	return &emptypb.Empty{}, nil
-}
-
 func main() {
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", grpcPort))
 	if err != nil {
@@ -55,4 +33,29 @@ func main() {
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)
 	}
+}
+
+// CreateChat - публичный метод, который создает новый чат.
+func (s *server) CreateChat(ctx context.Context, req *desc.CreateChatRequest) (*desc.CreateChatResponse, error) {
+	log.Printf("Context: %+v", ctx)
+	for _, value := range req.Usernames {
+		log.Printf("User id: %+v", value)
+	}
+
+	return &desc.CreateChatResponse{}, nil
+}
+
+// SendMessage - публичный метод, который отправляет сообщение в чат.
+func (s *server) SendMessage(ctx context.Context, req *desc.SendMessageRequest) (*emptypb.Empty, error) {
+	log.Printf("Context: %+v", ctx)
+	log.Printf("User id: %+v", req)
+
+	return &emptypb.Empty{}, nil
+}
+
+// DeleteChat - публичный метод, который удаляет чат.
+func (s *server) DeleteChat(ctx context.Context, req *desc.DeleteChatRequest) (*emptypb.Empty, error) {
+	log.Printf("Context: %+v", ctx)
+	log.Printf("User id: %+d", req.GetId())
+	return &emptypb.Empty{}, nil
 }
