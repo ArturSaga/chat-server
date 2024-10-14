@@ -5,7 +5,7 @@ import "google/protobuf/timestamp.proto";
 
 option go_package = "github.com/ArturSaga/auth/api/grpc/pkg/chat_v1;chat_v1";
 
-service UserApi {
+service ChatApi {
   rpc CreateChat(CreateChatRequest) returns(CreateChatResponse);
   rpc SendMessage(SendMessageRequest) returns(google.protobuf.Empty);
   rpc DeleteChat(DeleteChatRequest) returns(google.protobuf.Empty);
