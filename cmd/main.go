@@ -16,7 +16,7 @@ import (
 const grpcPort = 50051
 
 type server struct {
-	desc.UnimplementedUserApiServer
+	desc.UnimplementedChatApiServer
 }
 
 func main() {
@@ -27,7 +27,7 @@ func main() {
 
 	s := grpc.NewServer()
 	reflection.Register(s)
-	desc.RegisterUserApiServer(s, &server{})
+	desc.RegisterChatApiServer(s, &server{})
 
 	log.Printf("server listening at %v", lis.Addr())
 	if err := s.Serve(lis); err != nil {
