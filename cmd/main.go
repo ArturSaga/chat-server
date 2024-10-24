@@ -24,6 +24,8 @@ type server struct {
 	pool *pgxpool.Pool
 }
 
+const timeout = 15
+
 var configPath string
 
 func init() {
@@ -53,6 +55,12 @@ func main() {
 	lis, err := net.Listen("tcp", grpcConfig.Address())
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
+	}
+
+	if _, ok := ctx.Deadline(); !ok {
+		c, cancel := context.WithTimeout(ctx, timeout)
+		defer cancel()
+		ctx = c
 	}
 
 	// Создаем пул соединений с базой данных
