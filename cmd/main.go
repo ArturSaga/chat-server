@@ -5,18 +5,8 @@ import (
 	"flag"
 	"log"
 
-	"github.com/jackc/pgx/v4/pgxpool"
-
-	desc "github.com/ArturSaga/chat-server/api/grpc/pkg/chat_v1"
 	"github.com/ArturSaga/chat-server/internal/app"
 )
-
-type server struct {
-	desc.UnimplementedChatApiServer
-	pool *pgxpool.Pool
-}
-
-const timeout = 15
 
 var configPath string
 

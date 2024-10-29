@@ -5,6 +5,7 @@ import (
 	"github.com/ArturSaga/chat-server/internal/model"
 )
 
+// ToChatFromDesc - конвертор, для получания модели сервисного слоя из апи слоя
 func ToChatFromDesc(chat *desc.CreateChatRequest) *model.Chat {
 	return &model.Chat{
 		UserIDs:   chat.UserIds,

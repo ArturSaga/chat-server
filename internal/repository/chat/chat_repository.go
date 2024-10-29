@@ -16,13 +16,12 @@ import (
 const chatTableName = "chats"
 const userChatTableName = "chat_users"
 
-const idChatColumn = "id"
-const nameChatColumn = "chat_name"
-const createdAtChatColumn = "created_at"
+const idColumnChat = "id"
+const nameColumnChat = "chat_name"
 
-const chatIdColumn = "chat_id"
-const userIdColumn = "user_id"
-const userNameColumn = "user_name"
+const chatIDColumnUserChat = "chat_id"
+const userIDColumnUserChat = "user_id"
+const userNameColumnUserChat = "user_name"
 
 type repo struct {
 	db db.Client
@@ -37,7 +36,7 @@ func (r *repo) CreateChat(ctx context.Context, chat *model.Chat) (int64, error) 
 	// Делаем запрос на вставку записи в таблицу user
 	builderChatInsert := sq.Insert(chatTableName).
 		PlaceholderFormat(sq.Dollar).
-		Columns(nameChatColumn).
+		Columns(nameColumnChat).
 		Values(chat.ChatName).
 		Suffix("RETURNING id")
 
@@ -61,7 +60,7 @@ func (r *repo) CreateChat(ctx context.Context, chat *model.Chat) (int64, error) 
 
 	builderUserChatInsert := sq.Insert(userChatTableName).
 		PlaceholderFormat(sq.Dollar).
-		Columns(chatIdColumn, userIdColumn, userNameColumn)
+		Columns(chatIDColumnUserChat, userIDColumnUserChat, userNameColumnUserChat)
 
 	for i := range chat.UserIDs {
 		builderUserChatInsert = builderUserChatInsert.Values(chatID, chat.UserIDs[i], chat.UserNames[i])
@@ -92,7 +91,7 @@ func (r *repo) CreateChat(ctx context.Context, chat *model.Chat) (int64, error) 
 func (r *repo) DeleteChat(ctx context.Context, id int64) (*emptypb.Empty, error) {
 	builderUserDelete := sq.Delete(chatTableName).
 		PlaceholderFormat(sq.Dollar).
-		Where(sq.Eq{idChatColumn: id})
+		Where(sq.Eq{idColumnChat: id})
 
 	query, args, err := builderUserDelete.ToSql()
 	if err != nil {
