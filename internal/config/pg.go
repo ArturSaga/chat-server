@@ -30,6 +30,7 @@ func NewPGConfig() (PGConfig, error) {
 	}, nil
 }
 
+// DSN - публичный метод, возвращающий DSN
 func (cfg *pgConfig) DSN() string {
 	return cfg.dsn
 }

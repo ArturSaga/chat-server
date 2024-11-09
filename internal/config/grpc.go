@@ -40,6 +40,7 @@ func NewGRPCConfig() (GRPCConfig, error) {
 	}, nil
 }
 
+// Address -  публичный метод, формирующий url + port подключения к бд
 func (cfg *grpcConfig) Address() string {
 	return net.JoinHostPort(cfg.host, cfg.port)
 }

@@ -29,6 +29,7 @@ func NewMessageRepository(db db.Client) repository.MessageRepository {
 	return &repo{db: db}
 }
 
+// SendMessage - публичный метод, для отправки сообщения в слое репозитория
 func (r *repo) SendMessage(ctx context.Context, message *model.Message) (*emptypb.Empty, error) {
 	fmt.Println(message.Text)
 	// Делаем запрос на вставку записи в таблицу user

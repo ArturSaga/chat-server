@@ -15,7 +15,7 @@ import (
 	messageRepository "github.com/ArturSaga/chat-server/internal/repository/message"
 	"github.com/ArturSaga/chat-server/internal/service"
 	chatService "github.com/ArturSaga/chat-server/internal/service/chat"
-	"github.com/ArturSaga/chat-server/internal/service/message"
+	messageService "github.com/ArturSaga/chat-server/internal/service/message"
 )
 
 type serviceProvider struct {
@@ -30,13 +30,14 @@ type serviceProvider struct {
 	chatService    service.ChatService
 	messageService service.MessageService
 
-	implementation *chat.Implementation
+	chatServer *chat.ChatServer
 }
 
 func newServiceProvider() *serviceProvider {
 	return &serviceProvider{}
 }
 
+// PgConfig - публичный метод, инициализирующий объект с postgres конфигами
 func (s serviceProvider) PgConfig() config.PGConfig {
 	if s.pgConfig == nil {
 		cfg, err := config.NewPGConfig()
@@ -50,7 +51,8 @@ func (s serviceProvider) PgConfig() config.PGConfig {
 	return s.pgConfig
 }
 
-func (s serviceProvider) GRPCConfig() config.GRPCConfig {
+// GRPCConfig - публичный метод, инициализирующий объект с grpc конфигами
+func (s *serviceProvider) GRPCConfig() config.GRPCConfig {
 	if s.grpcConfig == nil {
 		cfg, err := config.NewGRPCConfig()
 		if err != nil {
@@ -62,6 +64,7 @@ func (s serviceProvider) GRPCConfig() config.GRPCConfig {
 	return s.grpcConfig
 }
 
+// DBClient - публичный метод, инициализирующий объект соединения с бд
 func (s *serviceProvider) DBClient(ctx context.Context) db.Client {
 	if s.dbClient == nil {
 		cl, err := pg.New(ctx, s.PgConfig().DSN())
@@ -81,6 +84,7 @@ func (s *serviceProvider) DBClient(ctx context.Context) db.Client {
 	return s.dbClient
 }
 
+// TxManager - публичный метод, инициализирующий объект для работы с транзакциями
 func (s *serviceProvider) TxManager(ctx context.Context) db.TxManager {
 	if s.txManager == nil {
 		s.txManager = transaction.NewTransactionManager(s.DBClient(ctx).DB())
@@ -89,6 +93,7 @@ func (s *serviceProvider) TxManager(ctx context.Context) db.TxManager {
 	return s.txManager
 }
 
+// ChatRepository - публичный метод, инициализирующий объект репозитория postgres с таблицей chats
 func (s *serviceProvider) ChatRepository(ctx context.Context) repository.ChatRepository {
 	if s.chatRepository == nil {
 		s.chatRepository = chatRepository.NewChatRepository(s.DBClient(ctx))
@@ -97,6 +102,7 @@ func (s *serviceProvider) ChatRepository(ctx context.Context) repository.ChatRep
 	return s.chatRepository
 }
 
+// MessageRepository - публичный метод, инициализирующий объект репозитория postgres с таблицей messages
 func (s *serviceProvider) MessageRepository(ctx context.Context) repository.MessageRepository {
 	if s.messageRepository == nil {
 		s.messageRepository = messageRepository.NewMessageRepository(s.DBClient(ctx))
@@ -105,6 +111,7 @@ func (s *serviceProvider) MessageRepository(ctx context.Context) repository.Mess
 	return s.messageRepository
 }
 
+// ChatService - публичный метод, инициализирующий объект сервиса
 func (s *serviceProvider) ChatService(ctx context.Context) service.ChatService {
 	if s.chatService == nil {
 		s.chatService = chatService.NewChatService(
@@ -116,9 +123,10 @@ func (s *serviceProvider) ChatService(ctx context.Context) service.ChatService {
 	return s.chatService
 }
 
+// MessageService - публичный метод, инициализирующий объект сервиса
 func (s *serviceProvider) MessageService(ctx context.Context) service.MessageService {
 	if s.messageService == nil {
-		s.messageService = message.NewMessageService(
+		s.messageService = messageService.NewMessageService(
 			s.MessageRepository(ctx),
 			s.TxManager(ctx),
 		)
@@ -127,10 +135,11 @@ func (s *serviceProvider) MessageService(ctx context.Context) service.MessageSer
 	return s.messageService
 }
 
-func (s *serviceProvider) ChatImpl(ctx context.Context) *chat.Implementation {
-	if s.implementation == nil {
-		s.implementation = chat.NewImplementation(s.ChatService(ctx), s.MessageService(ctx))
+// ChatImpl - публичный метод, инициализирующий объект сервера
+func (s *serviceProvider) ChatImpl(ctx context.Context) *chat.ChatServer {
+	if s.chatServer == nil {
+		s.chatServer = chat.NewChatServer(s.ChatService(ctx), s.MessageService(ctx))
 	}
 
-	return s.implementation
+	return s.chatServer
 }

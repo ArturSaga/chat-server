@@ -32,8 +32,9 @@ func NewChatRepository(db db.Client) repository.ChatRepository {
 	return &repo{db: db}
 }
 
+// CreateChat - публичный метод, для создания чата в слое репозитория
 func (r *repo) CreateChat(ctx context.Context, chat *model.Chat) (int64, error) {
-	// Делаем запрос на вставку записи в таблицу user
+	// Делаем запрос на вставку записи в таблицу chats
 	builderChatInsert := sq.Insert(chatTableName).
 		PlaceholderFormat(sq.Dollar).
 		Columns(nameColumnChat).
@@ -88,6 +89,7 @@ func (r *repo) CreateChat(ctx context.Context, chat *model.Chat) (int64, error) 
 	return chatID, nil
 }
 
+// DeleteChat - публичный метод, для удаления чата в слое репозитория
 func (r *repo) DeleteChat(ctx context.Context, id int64) (*emptypb.Empty, error) {
 	builderUserDelete := sq.Delete(chatTableName).
 		PlaceholderFormat(sq.Dollar).
