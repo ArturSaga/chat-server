@@ -1,6 +1,6 @@
 module github.com/ArturSaga/chat-server
 
-go 1.23
+go 1.23.2
 
 require (
 	github.com/Masterminds/squirrel v1.5.4
@@ -17,6 +17,7 @@ require (
 )
 
 require (
+	github.com/ArturSaga/platform_common v0.0.0-20241115133223-837e124237ad // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/jackc/chunkreader/v2 v2.0.1 // indirect
 	github.com/jackc/pgio v1.0.0 // indirect

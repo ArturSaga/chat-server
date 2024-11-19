@@ -4,11 +4,12 @@ import (
 	"context"
 	"log"
 
+	"github.com/ArturSaga/platform_common/pkg/closer"
+	"github.com/ArturSaga/platform_common/pkg/db"
+	"github.com/ArturSaga/platform_common/pkg/db/pg"
+	"github.com/ArturSaga/platform_common/pkg/db/transaction"
+
 	"github.com/ArturSaga/chat-server/internal/api/chat"
-	"github.com/ArturSaga/chat-server/internal/client/db"
-	"github.com/ArturSaga/chat-server/internal/client/db/pg"
-	"github.com/ArturSaga/chat-server/internal/client/db/transaction"
-	"github.com/ArturSaga/chat-server/internal/closer"
 	"github.com/ArturSaga/chat-server/internal/config"
 	"github.com/ArturSaga/chat-server/internal/repository"
 	chatRepository "github.com/ArturSaga/chat-server/internal/repository/chat"

@@ -11,7 +11,8 @@ import (
 	"github.com/stretchr/testify/require"
 	"google.golang.org/protobuf/types/known/emptypb"
 
-	"github.com/ArturSaga/chat-server/internal/client/db"
+	"github.com/ArturSaga/platform_common/pkg/db"
+
 	txMocks "github.com/ArturSaga/chat-server/internal/client/db/mocks"
 	"github.com/ArturSaga/chat-server/internal/model"
 	"github.com/ArturSaga/chat-server/internal/repository"
