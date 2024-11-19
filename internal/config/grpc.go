@@ -1,28 +1,29 @@
-package env
+package config
 
 import (
 	"net"
 	"os"
 
 	"github.com/pkg/errors"
-
-	"github.com/ArturSaga/chat-server/internal/config"
 )
-
-var _ config.GRPCConfig = (*grpcConfig)(nil)
 
 const (
 	grpcHostEnvName = "GRPC_HOST"
 	grpcPortEnvName = "GRPC_PORT"
 )
 
+// GRPCConfig - интерфейс, определяющий методы GRPCConfig
+type GRPCConfig interface {
+	Address() string
+}
+
 type grpcConfig struct {
 	host string
 	port string
 }
 
-// NewGRPCConfig - публичный метод, который получает данные для подключения GRPC из env файла
-func NewGRPCConfig() (*grpcConfig, error) {
+// NewGRPCConfig - публичный метод, для создания grpc сервера
+func NewGRPCConfig() (GRPCConfig, error) {
 	host := os.Getenv(grpcHostEnvName)
 	if len(host) == 0 {
 		return nil, errors.New("grpc host not found")
@@ -39,7 +40,6 @@ func NewGRPCConfig() (*grpcConfig, error) {
 	}, nil
 }
 
-// Address - публичный метод, который формирует адресс подключения из полученных данных
 func (cfg *grpcConfig) Address() string {
 	return net.JoinHostPort(cfg.host, cfg.port)
 }
