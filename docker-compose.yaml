@@ -38,3 +38,7 @@ services:
     restart: on-failure
     environment:
       DB_HOST: pg_prod
+
+  redis:
+    image: redis:7.2.5-alpine3.20
+    container_name: redis_ch_s

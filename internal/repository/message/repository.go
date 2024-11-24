@@ -7,7 +7,8 @@ import (
 	sq "github.com/Masterminds/squirrel"
 	"google.golang.org/protobuf/types/known/emptypb"
 
-	"github.com/ArturSaga/chat-server/internal/client/db"
+	"github.com/ArturSaga/platform_common/pkg/db"
+
 	"github.com/ArturSaga/chat-server/internal/model"
 	"github.com/ArturSaga/chat-server/internal/repository"
 )
@@ -29,6 +30,7 @@ func NewMessageRepository(db db.Client) repository.MessageRepository {
 	return &repo{db: db}
 }
 
+// SendMessage - публичный метод, для отправки сообщения в слое репозитория
 func (r *repo) SendMessage(ctx context.Context, message *model.Message) (*emptypb.Empty, error) {
 	fmt.Println(message.Text)
 	// Делаем запрос на вставку записи в таблицу user

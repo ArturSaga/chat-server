@@ -5,16 +5,16 @@ import (
 	"github.com/ArturSaga/chat-server/internal/service"
 )
 
-// Implementation - сущность, которая ипмлементирует контракты
-type Implementation struct {
+// ChatServer - сущность, которая ипмлементирует контракты
+type ChatServer struct {
 	desc.UnimplementedChatApiServer
 	chatService    service.ChatService
 	messageService service.MessageService
 }
 
-// NewImplementation - публичный метод, реализует контракты
-func NewImplementation(chatService service.ChatService, messageService service.MessageService) *Implementation {
-	return &Implementation{
+// NewChatServer - публичный метод, реализует контракты
+func NewChatServer(chatService service.ChatService, messageService service.MessageService) *ChatServer {
+	return &ChatServer{
 		chatService:    chatService,
 		messageService: messageService,
 	}

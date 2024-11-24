@@ -9,8 +9,9 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/reflection"
 
+	"github.com/ArturSaga/platform_common/pkg/closer"
+
 	desc "github.com/ArturSaga/chat-server/api/grpc/pkg/chat_v1"
-	"github.com/ArturSaga/chat-server/internal/closer"
 	"github.com/ArturSaga/chat-server/internal/config"
 )
 
@@ -42,6 +43,7 @@ func (a *App) Run() error {
 	return a.runGRPCServer()
 }
 
+// initDeps - приватный метод, вызывающий инициализацию зависимостей, загрузку конфигов
 func (a *App) initDeps(ctx context.Context) error {
 	inits := []func(context.Context) error{
 		a.initConfig,
@@ -59,6 +61,7 @@ func (a *App) initDeps(ctx context.Context) error {
 	return nil
 }
 
+// initConfig - приватный метод, вызывающий загрузку конфигов из переменных окружения
 func (a *App) initConfig(_ context.Context) error {
 	err := config.Load("local.env")
 	if err != nil {
@@ -68,11 +71,13 @@ func (a *App) initConfig(_ context.Context) error {
 	return nil
 }
 
+// initServiceProvider - приватный метод, вызывающий инициализацию зависимостей (DI котейнер)
 func (a *App) initServiceProvider(_ context.Context) error {
 	a.serviceProvider = newServiceProvider()
 	return nil
 }
 
+// initGRPCServer - приватный метод, инициализирующий grpc сервер
 func (a *App) initGRPCServer(ctx context.Context) error {
 	a.grpcServer = grpc.NewServer(grpc.Creds(insecure.NewCredentials()))
 
@@ -83,6 +88,7 @@ func (a *App) initGRPCServer(ctx context.Context) error {
 	return nil
 }
 
+// runGRPCServer - приватный метод, запускающий grpc сервер
 func (a *App) runGRPCServer() error {
 	log.Printf("GRPC server is running on %s", a.serviceProvider.GRPCConfig().Address())
 
